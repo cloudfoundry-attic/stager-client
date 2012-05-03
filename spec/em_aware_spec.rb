@@ -39,9 +39,9 @@ describe VCAP::Stager::Client::EmAware do
 
         client = VCAP::Stager::Client::EmAware.new(conn, queue)
 
-        promise = client.stage(request)
+        deferrable = client.stage(request)
 
-        promise.on_error do |e|
+        deferrable.errback do |e|
           request_error = e
 
           EM.stop
@@ -59,9 +59,9 @@ describe VCAP::Stager::Client::EmAware do
       when_nats_connected(nats_server) do |conn|
         client = VCAP::Stager::Client::EmAware.new(conn, queue)
 
-        promise = client.stage(request, 0.1)
+        deferrable = client.stage(request, 0.1)
 
-        promise.on_error do |e|
+        deferrable.errback do |e|
           request_error = e
 
           EM.stop
@@ -84,9 +84,9 @@ describe VCAP::Stager::Client::EmAware do
 
         client = VCAP::Stager::Client::EmAware.new(conn, queue)
 
-        promise = client.stage(request, 10)
+        deferrable = client.stage(request, 10)
 
-        promise.on_response do |resp|
+        deferrable.callback do |resp|
           recvd_resp = resp
 
           EM.stop

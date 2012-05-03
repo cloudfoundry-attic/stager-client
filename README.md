@@ -12,16 +12,16 @@ Sample usage:
     client = VCAP::Stager::Client::EmAware.new(nats_connection, queue)
 
     # Send the request, wait up to 10 seconds for a result
-    promise = client.stage(request, 10)
+    deferrable = client.stage(request, 10)
 
     # Block will be invoked on any reply that is received (regardless of
     # whether or not the Stager succeeded or failed).
-    promise.on_response { |r| puts "Received response: #{r}" }
+    deferrable.callback { |r| puts "Received response: #{r}" }
 
     # Block will be invoked when an error occurs while processing the request.
     # This includes errors deserializing the response and timeouts waiting for
     # a reply.
-    promise.on_error { |e| puts "An error occurred: #{e}" }
+    deferrable.errback { |e| puts "An error occurred: #{e}" }
 
 _FiberAware_
 

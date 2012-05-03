@@ -13,17 +13,17 @@ class VCAP::Stager::Client::FiberAware < VCAP::Stager::Client::EmAware
   # Requests that an application be staged. Blocks the current fiber until
   # the request completes.
   #
-  # @see VCAP::Stager::EmClient#stage for a description of the arguments
+  # @see VCAP::Stager::Client::EmAware#stage for a description of the arguments
   #
   # @return [Hash]
   def stage(*args, &blk)
-    promise = super
+    deferrable = super
 
     f = Fiber.current
 
-    promise.on_response { |response| f.resume({ :response => response }) }
+    deferrable.callback { |response| f.resume({ :response => response }) }
 
-    promise.on_error { |e| f.resume({ :error => e }) }
+    deferrable.errback { |e| f.resume({ :error => e }) }
 
     result = Fiber.yield
 
