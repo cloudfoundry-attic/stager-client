@@ -2,6 +2,7 @@ require "eventmachine"
 require "nats/client"
 require "rspec"
 require "socket"
+require "schemata/staging"
 
 class ForkedNatsServer
 
@@ -99,7 +100,7 @@ end
 
 def handle_request(conn, subj, &blk)
   conn.subscribe(subj) do |msg, reply_to|
-    decoded_message = Yajl::Parser.parse(msg)
+    decoded_message = Schemata::Staging::Message.decode(msg).contents
 
     blk.call(decoded_message, reply_to)
   end
