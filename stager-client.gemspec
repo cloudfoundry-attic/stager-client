@@ -22,4 +22,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency("eventmachine")
   gem.add_dependency("nats")
   gem.add_dependency("yajl-ruby")
+  gem.add_dependency("schemata-staging", "~> 0.0.1.1")
 end

@@ -1,15 +1,16 @@
+require 'schemata/staging'
 require "spec_helper"
 
 describe VCAP::Stager::Client::EmAware do
   # Provides nats_server via let
   include_context :nats_server
 
-  let(:request) { { "test" => "request" } }
+  let(:request) { Schemata::Staging.mock_message.contents }
 
   let(:queue) { "test" }
 
   describe "#stage" do
-    it "should publish the json-encoded request to the supplied queue" do
+    it "should publish the Schemata-encoded request to the supplied queue" do
       decoded_message = nil
 
       when_nats_connected(nats_server) do |conn|
@@ -24,7 +25,6 @@ describe VCAP::Stager::Client::EmAware do
       end
 
       decoded_message.should_not(be_nil)
-
       decoded_message.should == request
     end
 

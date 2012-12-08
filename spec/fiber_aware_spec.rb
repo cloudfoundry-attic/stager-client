@@ -3,7 +3,7 @@ require "spec_helper"
 describe VCAP::Stager::Client::FiberAware do
   include_context :nats_server
 
-  let(:request) { { "test" => "request" } }
+  let(:request) { Schemata::Staging.mock_message.contents }
 
   let(:queue) { "test" }
 

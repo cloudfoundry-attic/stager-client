@@ -1,4 +1,5 @@
 require "eventmachine"
+require "schemata/staging"
 require "yajl"
 
 require "vcap/stager/client/errors"
@@ -25,11 +26,12 @@ class VCAP::Stager::Client::EmAware
   #
   # @return [EM::DefaultDeferrable]
   def stage(request_details, timeout_secs = 120)
-    request_details_json = Yajl::Encoder.encode(request_details)
+    msg_obj = Schemata::Staging::Message::V1.new(request_details)
+    encoded_msg = msg_obj.encode
 
     deferrable = EM::DefaultDeferrable.new
 
-    sid = @nats.request(@queue, request_details_json) do |result|
+    sid = @nats.request(@queue, encoded_msg) do |result|
       begin
         decoded_result = Yajl::Parser.parse(result)
       rescue => e
