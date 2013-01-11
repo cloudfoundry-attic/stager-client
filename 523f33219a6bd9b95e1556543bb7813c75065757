@@ -1,0 +1,7 @@
+Verified+1: Pieter Noordhuis <pnoordhuis@rbcon.com>
+Code-Review+2: Kowshik Prakasam <kprakasam@rbcon.com>
+Submitted-by: David Sabeti <dsabeti@rbcon.com>
+Submitted-at: Fri, 11 Jan 2013 21:53:29 +0000
+Reviewed-on: http://reviews.cloudfoundry.org/12402
+Project: stager-client
+Branch: refs/heads/schemata
