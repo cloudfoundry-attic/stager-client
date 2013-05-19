@@ -95,5 +95,30 @@ describe VCAP::Stager::Client::EmAware do
 
       recvd_resp.should == exp_resp
     end
+
+    it "should unsubscribe the subject on a response" do
+      num_client_subs_before = 0
+      num_client_subs_after  = 1
+
+      when_nats_connected(nats_server) do |conn|
+        handle_request(conn, queue) do |req, reply_to|
+          conn.publish(reply_to, Yajl::Encoder.encode({ "test" => "resp" }))
+        end
+
+        client = VCAP::Stager::Client::EmAware.new(conn, queue)
+        nats = client.instance_variable_get(:@nats)
+        num_client_subs_before = nats.subscription_count
+
+        deferrable = client.stage(request, 3)
+
+        deferrable.callback do |resp|
+          num_client_subs_after = nats.subscription_count
+
+          EM.stop
+        end
+      end
+
+      num_client_subs_after.should == num_client_subs_before
+    end
   end
 end
