@@ -29,7 +29,7 @@ class VCAP::Stager::Client::EmAware
 
     deferrable = EM::DefaultDeferrable.new
 
-    sid = @nats.request(@queue, request_details_json) do |result|
+    sid = @nats.request(@queue, request_details_json, {:max => 1}) do |result|
       begin
         decoded_result = Yajl::Parser.parse(result)
       rescue => e
